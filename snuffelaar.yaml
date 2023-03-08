@@ -1,0 +1,164 @@
+substitutions:
+  name: "snuffelaar"
+
+esphome:
+  name: "${name}"
+  project:
+    name: daveol.esphome-snuffelaar
+    version: "1.0"
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+# This should point to the public location of this yaml file.
+dashboard_import:
+  package_import_url: github://daveol/esphome-snuffelaar/snuffelaar.yaml@main
+
+
+# Enable fallback hotspot (captive portal) in case wifi connection fails
+wifi:
+  ap:
+    ssid: "${name}"
+    ap_timeout: 15s
+
+# In combination with the `ap` this allows the user
+# to provision wifi credentials to the device.
+captive_portal:
+
+# Sets up Bluetooth LE (Only on ESP32) to allow the user
+# to provision wifi credentials to the device.
+esp32_improv:
+  authorizer: none
+
+# Sets up the improv via serial client for Wi-Fi provisioning.
+# Handy if your device has a usb port for the user to add credentials when they first get it.
+improv_serial:
+
+# Enable webserver for standalone usage
+web_server:
+
+# Dallas one-wire pin for DS18B20
+dallas:
+  - pin: 04
+
+# Define UART's for 
+uart:
+# UART for MH-Z19
+  - rx_pin: 22
+    tx_pin: 21
+    baud_rate: 9600
+    id: uart0
+# UART for PMSX003
+  - rx_pin: 25
+    tx_pin: 32
+    baud_rate: 9600
+    id: uart1
+
+# I2C for BME280
+i2c:
+  sda: 23
+  scl: 13
+  scan: True
+  id: bus_a
+
+sensor:
+  - platform: dallas
+    address: 0x691de062da57ff28
+    name: "DS18B20 temperature"
+    
+  - platform: mhz19
+    co2:
+      name: "MH-Z19 CO2 Value"
+    temperature:
+      name: "MH-Z19 Temperature"
+    update_interval: 60s
+    automatic_baseline_calibration: true
+    uart_id: uart0
+    
+  - platform: pmsx003
+    type: PMSX003
+    pm_1_0:
+      name: "PMSX003 Particulate Matter <1.0µm Concentration"
+      filters:
+        - or:
+          - throttle: 60s
+          - delta: 2
+          - heartbeat: 300s
+    pm_2_5:
+      name: "PMSX003 Particulate Matter <2.5µm Concentration"
+      filters:
+        - or:
+          - throttle: 60s
+          - delta: 2
+          - heartbeat: 300s
+    pm_10_0:
+      name: "PMSX003 Particulate Matter <10.0µm Concentration"
+      filters:
+        - or:
+          - throttle: 60s
+          - delta: 2
+          - heartbeat: 300s
+    uart_id: uart1
+
+  - platform: bme280
+    temperature:
+      name: "BME280 Temperature"
+      oversampling: 16x
+    pressure:
+      name: "BME280 Pressure"
+    humidity:
+      name: "BME280 Humidity"
+    address: 0x76
+    update_interval: 60s
+    
+  - platform: uptime
+    name: "Uptime"   
+  - platform: wifi_signal
+    name: "Wi-Fi Signal"
+    update_interval: 60s
+
+light:
+  - platform: neopixelbus
+    variant: SK6812
+    type: GRBW
+    pin: 26
+    num_leds: 1
+    name: "NeoPixel Light"
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 15
+      mode:
+        input: true
+        pullup: true
+    name: "button"
+
+button:  
+  - platform: restart
+    name: "_Restart device"
+    id: reboot
+  - platform: factory_reset
+    name: "_Restart with Factory Default Settings"
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+    ssid:
+      name: "Wi-Fi SSID"
+    bssid:
+      name: "Wi-Fi BSSID"
+  - platform: version
+    name: "ESPHome Version"
+    hide_timestamp: true
