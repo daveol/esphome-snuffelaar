@@ -57,12 +57,12 @@ uart:
   - rx_pin: 22
     tx_pin: 21
     baud_rate: 9600
-    id: uart0
+    id: mhz19_uart
 # UART for PMSX003
   - rx_pin: 25
     tx_pin: 32
     baud_rate: 9600
-    id: uart1
+    id: pms_uart
 
 # I2C for BME280
 i2c:
@@ -83,7 +83,7 @@ sensor:
       name: "MH-Z19 Temperature"
     update_interval: 60s
     automatic_baseline_calibration: true
-    uart_id: uart0
+    uart_id: mhz19_uart
     
   - platform: pmsx003
     type: PMSX003
@@ -108,7 +108,7 @@ sensor:
           - throttle: 60s
           - delta: 2
           - heartbeat: 300s
-    uart_id: uart1
+    uart_id: pms_uart
 
   - platform: bme280_i2c
     temperature:
