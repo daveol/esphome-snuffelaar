@@ -48,7 +48,7 @@ improv_serial:
 web_server:
 
 # Dallas one-wire pin for DS18B20
-dallas:
+one_wire:
   - pin: 04
 
 # Define UART's for 
