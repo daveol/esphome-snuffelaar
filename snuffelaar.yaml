@@ -73,7 +73,7 @@ i2c:
   id: bus_a
 
 sensor:
-  - platform: dallas
+  - platform: dallas_temp
     address: 0x691de062da57ff28
     name: "DS18B20 temperature"
     
