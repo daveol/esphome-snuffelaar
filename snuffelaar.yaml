@@ -49,7 +49,8 @@ web_server:
 
 # Dallas one-wire pin for DS18B20
 one_wire:
-  - pin: 04
+  - platform: gpio
+    pin: 04
 
 # Define UART's for 
 uart:
