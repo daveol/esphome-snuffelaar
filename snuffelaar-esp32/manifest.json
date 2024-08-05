@@ -2,7 +2,7 @@
   "chipFamily": "ESP32",
   "ota": {
     "path": "snuffelaar-esp32/snuffelaar-esp32.ota.bin",
-    "md5": "7fb4964e5a7bd7f29c12fc89eb642e4e"
+    "md5": "9c8edd30a64eb0b79448c106263eda59"
   },
   "parts": [
     {
