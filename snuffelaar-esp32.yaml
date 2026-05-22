@@ -27,3 +27,98 @@ wifi:
 # In combination with the `ap` this allows the user
 # to provision wifi credentials to the device.
 captive_portal:
+
+### SENSOR CONFIGURATION
+one_wire:
+  - platform: gpio
+    pin: GPIO04
+
+uart:
+  - rx_pin: 22
+    tx_pin: 21
+    baud_rate: 9600
+    id: uart_mhz19
+  - rx_pin: 25
+    tx_pin: 32
+    baud_rate: 9600
+    id: uart_pmsx003
+
+i2c:
+  sda: 23
+  scl: 13
+  scan: True
+  id: bus_a
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+    timezone: "Europe/Amsterdam"
+
+sensor:
+  - platform: dallas_temp
+    index: 0
+    name: "DS18B20 temperature"
+  - platform: mhz19
+    co2:
+      name: "MH-Z19 CO2 Value"
+    temperature:
+      name: "MH-Z19 Temperature"
+    update_interval: 60s
+    automatic_baseline_calibration: false
+    uart_id: uart_mhz19
+  - platform: pmsx003
+    type: PMSX003
+    pm_1_0:
+      name: "PMSX003 Particulate Matter <1.0µm Concentration"
+      filters:
+        - or:
+          - throttle: 60s
+          - delta: 2
+          - heartbeat: 300s
+    pm_2_5:
+      name: "PMSX003 Particulate Matter <2.5µm Concentration"
+      filters:
+        - or:
+          - throttle: 60s
+          - delta: 2
+          - heartbeat: 300s
+    pm_10_0:
+      name: "PMSX003 Particulate Matter <10.0µm Concentration"
+      filters:
+        - or:
+          - throttle: 60s
+          - delta: 2
+          - heartbeat: 300s
+    uart_id: uart_pmsx003
+
+  - platform: bme280_i2c
+    temperature:
+      name: "BME280 Temperature"
+      oversampling: 16x
+    pressure:
+      name: "BME280 Pressure"
+    humidity:
+      name: "BME280 Humidity"
+    address: 0x76
+    update_interval: 60s
+
+light:
+  - platform: esp32_rmt_led_strip
+    chipset: SK6812
+    rgb_order: GRB
+    is_rgbw: true
+    pin: GPIO26
+    num_leds: 1
+    name: "NeoPixel Light"
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO15
+      mode: INPUT_PULLUP
+    name: "button"
+
+text_sensor:
+  - platform: version
+    name: "ESPHome Version"
+    hide_timestamp: true
