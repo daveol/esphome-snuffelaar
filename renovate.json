@@ -11,7 +11,8 @@
         "/^\\.github/workflows/.+\\.ya?ml$/"
       ],
       "matchStrings": [
-        "esphome-version:\\s*[\"']?(?<currentValue>[^\\s\"']+)[\"']?"
+        "esphome-version:\\s*[\"']?(?<currentValue>[^\\s\"']+)[\"']?",
+        "version:\\s*[\"']?(?<currentValue>[^\\s\"']+)[\"']?\\s*#esphome-version"
       ],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "esphome/esphome",
