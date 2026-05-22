@@ -15,31 +15,18 @@ concurrency:
 
 jobs:
   ci:
-    name: Building ${{ matrix.file }} / ${{ matrix.esphome-version }}
+    name: Building
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      max-parallel: 3
-      matrix:
-        #### Modify below here to match your project ####
-        file:
-          - snuffelaar-esp32
-        #### Modify above here to match your project ####
-
-        esphome-version:
-          - stable
-          - beta
-          - dev
     steps:
       - name: Checkout source code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
-      - name: ESPHome ${{ matrix.esphome-version }}
+      - name: ESPHome Build
         uses: esphome/build-action@f0a331817f5535854a10a42621b6a8b7ebe95c4c  # v7.2.0
         with:
-          yaml-file: ${{ matrix.file }}.yaml
-          version: ${{ matrix.esphome-version }}
-      - name: ESPHome ${{ matrix.esphome-version }} Factory
+          yaml-file: snuffelaar.yaml
+          esphome-version: 2026.5.0
+      - name: ESPHome Build (Factory)
         uses: esphome/build-action@f0a331817f5535854a10a42621b6a8b7ebe95c4c  # v7.2.0
         with:
-          yaml-file: ${{ matrix.file }}.factory.yaml
-          version: ${{ matrix.esphome-version }}
+          yaml-file: snuffelaar.factory.yaml
+          esphome-version: 2026.5.0
