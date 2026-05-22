@@ -1,10 +1,11 @@
 name: CI
 
 on:
-  pull_request:
+  pull_request: &paths
     paths:
       - '*.yaml'
       - '.github/workflows/ci.yml'
+  push: *paths
   schedule:
     - cron: '0 0 * * *'
 
